@@ -1,0 +1,165 @@
+# 이진탐색트리를 만들고 (배열 이용 혹은 연결구조 이용 은 각자 선택)
+# 동적으로 데이터를 insert, delete 를 반복하면서 BST 트리가 어떻게 변하는지
+# 트리 그림을 그려 나타내시오. 
+# 실습예제 있는 내용을 그대로 하지 말고 프로그램을 실행시킨후 insert 혹은 delete를
+# 입력받아 처리하는 형식으로 하시오.
+
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.left = None
+        self.right = None
+
+
+    
+class BST:
+    def __init__(self):
+        self.root = None
+
+
+    def insert(self, data):
+        # 처음 insert
+        if self.root is None:
+            self.root = Node(data)
+        else:
+            self.base = self.root
+            while True:
+                if data == self.base.data:
+                    print("\n이미 있는 key 값입니다")
+                    break
+                elif data > self.base.data:
+                    if self.base.right is None:
+                        self.base.right = Node(data)
+                        break
+                    else:
+                        self.base = self.base.right
+                else:
+                    if self.base.left is None:
+                        self.base.left = Node(data)
+                        break
+                    else:
+                        self.base = self.base.left
+
+
+    def search(self, data):
+        self.base = self.root
+        while self.base:
+            if self.base.data == data:
+                return True   # 값이 있음
+            elif self.base.data > data:
+                self.base = self.base.left
+            else:
+                self.base = self.base.right
+        return False   # 해당 값이 없음
+
+
+    def delete(self, data):
+        self.searched = False
+        self.del_node = self.root
+        self.parent = self.root
+        while self.del_node:
+            if self.del_node.data == data:
+                self.searched = True
+                break
+            elif self.del_node.data > data:
+                self.parent = self.del_node
+                self.del_node = self.del_node.left
+            else:
+                self.parent = self.del_node
+                self.del_node = self.del_node.right
+        if self.searched:
+            if self.del_node.data == self.parent.data:
+                self.root = None
+            else:
+                # 자식이 없는경우
+                if self.del_node.left is None and self.del_node.right is None:
+                    if self.parent.data > self.del_node.data:
+                        self.parent.left = None
+                    else:
+                        self.parent.right = None
+                        
+                # 자식이 왼쪽에만
+                elif self.del_node.left is not None and self.del_node.right is None:
+                    if self.parent.data > data:
+                        self.parent.left = self.del_node.left
+                    else:
+                        self.parent.right = self.del_node.left
+                        
+                # 자식이 오른쪽
+                elif self.del_node.left is None and self.del_node.right is not None:
+                    if self.parent.data > data:
+                        self.parent.left = self.del_node.right
+                    else:
+                        self.parent.right = self.del_node.right
+                        
+                # 자식이 둘
+                else:
+                    self.tmp_parent = self.del_node.right
+                    self.tmp_move = self.del_node.right
+                    while self.tmp_move.left:
+                        self.tmp_parent = self.tmp_move
+                        self.tmp_move = self.tmp_move.left
+                    if self.tmp_move.right is not None:
+                        self.tmp_parent.left = self.tmp_move.right
+                    else:
+                        self.tmp_parent.left = None
+                    if self.parent.data > data:
+                        self.parent.left = self.tmp_move
+                    else:
+                        self.parent.right = self.tmp_move
+                    self.tmp_move.left = self.del_node.left
+                    self.tmp_move.right = self.del_node.right
+                    if self.tmp_move == self.tmp_move.right:
+                        self.tmp_move.right = None
+                    else:
+                        pass
+                    
+
+                    
+                        
+        else:
+            print("\n해당 key 값은 존재하지 않습니다")
+
+
+    def display_tree(self, node):
+        if not node:
+            return
+        else:
+            self.display_tree(node.left)
+            print(node.data, end=' ')
+            self.display_tree(node.right)
+
+
+    def t_menu(self):
+        print("\n\n----------------------------------------")
+        print(" 1. 삽입")
+        print(" 2. 삭제")
+        print(" 3. 현재 트리 확인")
+        print(" 4. 끝내기")
+
+        input_num = int(input("\nㅇ 번호를 입력하세요 : "))
+        if input_num == 1:
+            t = int(input("\nㅇ 삽입할 숫자를 입력하세요 : "))
+            self.insert(t)
+            print("\n")
+            self.display_tree(b.root)
+        elif input_num == 2:
+            t = int(input("\nㅇ 삭제할 숫자를 입력하세요 : "))
+            self.delete(t)
+            print("\n")
+            self.display_tree(b.root)
+        elif input_num == 3:
+            print("\n")
+            self.display_tree(b.root)
+        elif input_num == 4:
+            exit()
+        else:
+            print("다시 입력 해주세요")
+        
+
+
+b = BST()
+
+print("ㅇ 삽입, 삭제 이후 현재 트리를 중위순회로 표시 해줍니다.")
+while 1:
+    b.t_menu()
