@@ -1,0 +1,116 @@
+#순차큐의 main 함수에 있는 enQueue와 deQueue에 대한 호출 부분을 없애고
+#입력을 통해 고객이 입장한 경우와 고객응대 종료의 경우로 나뉘고,
+#고객이 입장한 경우에는 대기번호를 알려주고.
+#고객응대가 종료된  경우에는 다음 대기번호의 고객을 호출
+#해 주는 시스템을 만들어 보아라.
+#**   추가메소드 :  현재 대기 고객수
+#                   현재 고객응대가 완료된 숫자
+#**   하루에 처리할 수있는 총 고객수는 최대 100 명으로 한다.
+import time
+maxsize = 100
+
+class bank:
+    def __init__(self):
+        self.w_number = []   # 대기 고객
+        self.d_number = []   # 끝난 고객
+        self.wait = 1   # 번호
+
+## 대기실
+        
+    def w_isEmpty(self):
+        return len(self.w_number) == 0
+
+    def w_clear(self):
+        self.w_number = []
+        
+    def w_size(self):
+        return len(self.w_number)
+
+    def w_enqueue(self, number):
+        if not self.w_size() == maxsize:
+            self.w_number.append(number)
+
+    def w_dequeue(self):
+        if not self.w_isEmpty():
+            return self.w_number.pop(0)
+
+    def w_peek(self):	
+        if not self.w_isEmpty():
+            return self.w_number[0]
+
+    def w_printqueue(self):
+        print(self.w_number)
+
+
+
+
+## 카운터
+
+    def d_finished(self, number):   # 끝난 고객들 추가
+        self.d_number.append(number)
+
+    def d_size(self):
+        return len(self.d_number)
+
+    def d_clear(self):
+        self.d_number = []
+
+
+
+
+## 진행
+    def w_menu(self):
+        print("\n\n----------------------------------------")
+        print(" 1. 고객 응대 시작")
+        print(" 2. 대기중인 고객의 수 확인")
+        print(" 3. 응대가 끝난 고객의 수 확인")
+        print(" 4. 고객 입장")
+        print(" 5. 끝내기")
+
+        input_num = int(input("\nㅇ 번호를 입력하세요 : "))
+        
+        if input_num == 1:
+            if self.w_isEmpty():
+                print("\nㅇ 고객이 없습니다.")
+            else:
+                data = self.w_peek()
+                self.w_dequeue()
+                self.d_finished(data)
+                print('\nㅇ %d번 고객의 응대를 시작 합니다.'%(data))
+                time.sleep(1)
+                print('\nㅇ 죄송합니다 %d번 고객님 오늘 담당자가 휴가라서...\n   내일 찾아오시면 처리 가능하실거에요. '%(data))
+                time.sleep(1)
+                if self.w_isEmpty():
+                    print("\nㅇ 응대가 종료 되었습니다. 다음 고객이 없습니다.")
+                    time.sleep(1)
+                else:
+                    data = self.w_peek()
+                    print('\nㅇ 응대가 종료 되었습니다. 다음 고객은 %d번 입니다'%(data))
+                    time.sleep(1)
+        elif input_num == 2:
+            print("\nㅇ 대기중인 고객의 수 :", self.w_size())
+        elif input_num == 3:
+            print("\nㅇ 응대가 끝난 고객의 수 :", self.d_size())
+        elif input_num == 4:
+            if self.w_size() == maxsize:
+                print("오늘은 더이상 고객을 받을 수 없습니다.")
+                return 0
+            else:
+                print("\nㅇ 고객 한명이 대기실로 입장 하였습니다.")
+                data = self.wait
+                self.wait += 1
+                self.w_enqueue(data)
+                print('ㅇ 대기번호는 %d번 입니다.'%(data))
+                return self.wait
+        elif input_num == 5:
+            print("종료하겠습니다.")
+            time.sleep(1)
+            exit()
+        else:
+            print("다시 입력 해주세요.")
+            
+
+
+c = bank()
+while 1:
+    c.w_menu()   
