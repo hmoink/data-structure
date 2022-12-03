@@ -1,0 +1,84 @@
+class stack():
+    def __init__(self):
+        self.data = []
+        self.count = 0
+
+    def empty(self):
+        return len(self.data) == 0
+
+    def size(self):
+        return len(self,data)
+    
+    def push(self, data):
+        self.data.append(data)
+        self.count += 1
+
+    def pop(self):
+        if not self.empty():
+            self.count -= 1
+            return self.data.pop()
+
+    def postfix(self, a):
+        self.temp = ''   # 후위표기식 저장할 곳
+        for i in a:
+            if i.isdigit():   #숫자면 True, 문자면 False 반환하는 함수
+                self.temp += i
+            else:
+                if i == '(':
+                    self.push(i)
+                elif i == '*' or i == '/':
+                    while self.data and (self.data[-1] == '*' or self.data[-1] =='/'):
+                        self.temp += self.pop()
+                    self.push(i)
+                elif i == '+' or i == '-':
+                    while self.data and self.data[-1] != '(':
+                        self.temp += self.pop()
+                    self.push(i)
+                elif i == ')':
+                    while self.data and self.data[-1] != '(':
+                        self.temp += self.pop()
+                    self.pop()
+        while self.data:
+            self.temp += self.pop()
+        return self.temp
+
+    def calculate(self, a):
+        for i in a:
+            if i == '+':
+                self.push(self.pop() + self.pop())
+            elif i == '-':
+                self.push(-(self.pop() - self.pop()))
+            elif i == '*':
+                self.push(self.pop() * self.pop())
+            elif i == '/':
+                p = self.pop()
+                self.push(self.pop() / p)
+            else:
+                self.push(int(i))
+        return self.pop()
+
+def input_ev():
+    c = []
+    global result
+    while True:
+        input_data = input("만들 식에 맞게 문자를 하나씩 입력(공백 = 입력 종료) :")
+        if input_data == "":
+            break
+        else:
+            c.append(input_data)
+    result = "".join(c)
+    return result
+        
+        
+
+if __name__=="__main__":
+    s = stack()
+    result = ''
+    input_ev()
+    print(result)
+    print(s.postfix(result))
+    postex = s.postfix(result)
+    print(s.calculate(postex))
+
+
+    input()
