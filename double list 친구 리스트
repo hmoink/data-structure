@@ -1,0 +1,90 @@
+#내 친구 리스트를 이중 연결리스트를 만드는 프로그램을 작성하여라.
+#(insert, delete, search, display(print) 그외 다수의 멤버함수가 필요)
+
+class Node():
+    def __init__(self, data, left = None, right = None):
+        self.data = data
+        self.left = left
+        self.right = right
+        
+
+        
+class DLList():
+    def __init__(self):
+        self.head = None
+        self.tail = self.head
+
+# 리스트 마지막에 data가 들어감
+    def insert(self, data):
+        if self.head == None:
+            self.head = Node(data)
+            self.tail = self.head
+        else:
+            node = self.tail
+            new_node = Node(data, left = node)
+            node.right = new_node
+            self.tail = new_node
+
+
+    def search_node(self, data):
+        node = self.head
+        while node:
+            if node.data == data:
+                return node
+            else:
+                node = node.right
+            
+
+    def delete(self, data):
+        if self.head.data == data:
+            t = self.head
+            self.head = self.head.right
+            del t
+        elif self.tail.data == data:
+            t = self.tail
+            self.tail = self.tail.left
+            del t
+        else:
+            t = self.search_node(data)
+            t.left.right = t.right
+            t.right.left = t.left
+            del t
+
+# data 앞에 new_data 넣기
+    def insert_left(self, data, new_data):
+        t = self.search_node(data)
+        if t == self.head:
+            t = self.head
+            new = Node(new_data, left = None, right = t)
+            self.head = new
+            t.left = new
+        else:
+            new = Node(new_data, left = t.left, right = t)
+            t.left.right = new
+            t.left = new    
+        
+
+    def display(self):
+        node = self.head
+        while node:
+            print(node.data, end =' ')
+            node = node.right
+
+
+
+
+d = DLList()
+d.insert('은아')
+d.insert('동준')
+d.insert('진혁')
+d.insert('태영')
+print("현재 친구 리스트 : ", end = '')
+d.display()
+
+print("\n\n수정내용 - 첫번째 범서 추가\n         - 은아 제거\n         - 태영 앞 승빈 추가", end = '')
+
+d.insert_left('은아', '범서')
+d.delete('은아')
+d.insert_left('태영', '승빈')
+print("\n\n수정 후의 친구 리스트 : ", end = '')
+d.display()
