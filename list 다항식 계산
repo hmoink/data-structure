@@ -1,0 +1,137 @@
+# poly 비어있는 다항식 생성
+# degree 다항식의 차수 반환
+# evaluate 미지수에 값을 넣어 계산한 결과를 반환
+# add 더하기
+# sub 빼기
+# mul 곱하기
+# display 다항식 표시
+
+
+class poly():
+    def __init__(self, coef):
+        self.coef = coef
+        self.degree = len(coef)
+
+    def display(self):
+        for i in range(self.degree):
+            if i == self.degree - 1:   # 상수일때
+                if self.coef[i] != 0.0:
+                    if self.coef[i] >= 0:
+                        print(" + ", end='')
+                    else:
+                        print(" - ", end='')
+                    print("%0.2f" % (abs(self.coef[i])))
+                else:
+                    print()
+            else:
+                if self.coef[i] != 0.0:
+                    if i == 0:
+                        print("%0.2f x^%d" % (self.coef[i], self.degree - i - 1), end='')
+                    else:
+                        if self.coef[i] >= 0:
+                            print(" + ", end='')
+                        else:
+                            print(" - ", end='')
+                        print("%0.2f x^%d" % (abs(self.coef[i]), self.degree - i - 1), end='')
+
+    def evaluate(self, x):
+        temp_degree = self.degree
+        val = 0
+        for i in range(self.degree):
+            temp = 1
+            for j in range(temp_degree - 1):
+                temp *= x
+            if temp_degree == 1:
+                temp = self.coef[i]
+            else:
+                temp = temp * self.coef[i]
+            val += temp
+            temp_degree -= 1
+        print('%0.1f' %val)
+
+def add(a, b):
+    x = []                  
+    apos = bpos = 0
+    degree_a = a.degree
+    degree_b = b.degree
+
+    while (apos < degree_a) or (bpos < degree_b):
+        if degree_a > degree_b:
+            x.append(a.coef[apos])
+            apos += 1
+            degree_a -= 1
+        elif degree_a == degree_b:
+            x.append(a.coef[apos]+b.coef[bpos])
+            apos += 1
+            bpos += 1
+        else:
+            x.append(b.coef[bpos])
+            bpos += 1
+            degree_b -= 1
+    return poly(x)
+
+def sub(a, b):
+    y = []
+    apos = bpos = 0
+    degree_a = a.degree
+    degree_b = b.degree
+    
+    while (apos < degree_a) or (bpos < degree_b):
+        if degree_a > degree_b:
+            y.append(a.coef[apos])
+            apos += 1
+            degree_a -= 1         
+        elif degree_a == degree_b:
+            y.append(a.coef[apos] - b.coef[bpos])
+            apos += 1
+            bpos += 1         
+        else:
+            y.append(-b.coef[bpos])
+            bpos += 1
+            degree_b -= 1
+    return poly(y)
+
+
+
+def mul(a):
+    z = []
+    c = float(input("곱할 상수 입력 : "))
+    degree_a = a.degree
+    apos = 0
+
+    while(apos < a.degree):
+        z.append(a.coef[apos] * c)
+        apos += 1
+        degree_a -= 1
+    return poly(z)
+        
+a = list(map(float, input("수식 1 입력 : ").split(' ')))
+
+b = list(map(float, input("수식 2 입력 : ").split(' ')))
+
+
+a = poly(a)
+b = poly(b)
+c = add(a, b)
+d = sub(a, b)
+e = mul(a)
+
+print('\n수식 1 = ', end='')
+a.display()
+print('수식 2 = ', end='')
+b.display()
+print('\n수식 1 + 수식 2  = ', end='')
+c.display()
+print('수식 1 - 수식 2 = ', end='')
+d.display()
+print('수식 1 * 상수 = ', end='')
+e.display()
+
+
+g = float(input('\n미지수 x에 넣을 값 입력 : '))
+print('덧셈식 계산 결과 : ', end='')
+c.evaluate(g)
+print('뺄셈식 계산 결과 : ', end='')
+d.evaluate(g)
+print('곱셈식 계산 결과 : ', end='')
+e.evaluate(g)
