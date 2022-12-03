@@ -1,0 +1,11 @@
+def hanoi(n, tow1, tow3, tow2):
+    if n == 1:
+        print(tow1, '에서', tow3, '(으)로 이동')
+        return
+    hanoi(n -1, tow1, tow2, tow3)
+    print(tow1, '에서', tow3, '(으)로 이동')
+    hanoi(n -1, tow2, tow3, tow1)
+
+
+n = int(input('링의 갯수 입력 : '))
+hanoi(n, 1, 3, 2)
